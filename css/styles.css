@@ -1,0 +1,53 @@
+body {
+  background-color: #f6f7fb;
+}
+
+.flashcard-card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  height: 100%;
+}
+
+.flashcard-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08);
+}
+
+.flashcard-card .card-text {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.flashcard-card img {
+  max-height: 140px;
+  object-fit: cover;
+  width: 100%;
+  border-radius: 0.375rem;
+}
+
+.study-card {
+  min-height: 320px;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.study-card img {
+  max-height: 220px;
+  object-fit: contain;
+}
+
+.dominance-low {
+  background-color: #e5e7eb !important;
+  color: #374151 !important;
+}
+.dominance-medium {
+  background-color: #fde68a !important;
+  color: #78350f !important;
+}
+.dominance-high {
+  background-color: #bbf7d0 !important;
+  color: #065f46 !important;
+}
+
+.group-card {
+  cursor: pointer;
+}

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flashcards</title>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container-fluid">
+      <span class="navbar-brand">
+        <i class="bi bi-card-text"></i> Flashcards
+      </span>
+      <button
+        class="btn btn-outline-light btn-sm ms-auto"
+        data-bs-toggle="modal"
+        data-bs-target="#settingsModal"
+      >
+        <i class="bi bi-gear"></i> Settings
+      </button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <ul class="nav nav-tabs mb-3" id="mainTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link active"
+          data-bs-toggle="tab"
+          data-bs-target="#flashcards-tab"
+          type="button"
+        >
+          <i class="bi bi-card-list"></i> Flashcards
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link"
+          data-bs-toggle="tab"
+          data-bs-target="#groups-tab"
+          type="button"
+        >
+          <i class="bi bi-collection"></i> Groups
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link"
+          data-bs-toggle="tab"
+          data-bs-target="#study-tab"
+          type="button"
+        >
+          <i class="bi bi-mortarboard"></i> Study
+        </button>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <!-- Flashcards tab -->
+      <div class="tab-pane fade show active" id="flashcards-tab">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h4 class="mb-0">Your Flashcards</h4>
+          <button class="btn btn-primary" id="btnNewFlashcard">
+            <i class="bi bi-plus-circle"></i> New Flashcard
+          </button>
+        </div>
+        <div id="flashcardsList" class="row g-3"></div>
+        <nav class="mt-3">
+          <ul class="pagination justify-content-center" id="flashcardsPagination"></ul>
+        </nav>
+      </div>
+
+      <!-- Groups tab -->
+      <div class="tab-pane fade" id="groups-tab">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h4 class="mb-0">Your Groups</h4>
+          <button class="btn btn-primary" id="btnNewGroup">
+            <i class="bi bi-plus-circle"></i> New Group
+          </button>
+        </div>
+        <div id="groupsList" class="row g-3"></div>
+      </div>
+
+      <!-- Study tab -->
+      <div class="tab-pane fade" id="study-tab">
+        <div class="row mb-3 align-items-end">
+          <div class="col-md-6">
+            <label class="form-label">Filter by group (optional)</label>
+            <select id="studyGroupSelect" class="form-select">
+              <option value="">All flashcards</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Limit</label>
+            <input
+              type="number"
+              id="studyLimit"
+              class="form-control"
+              min="1"
+              max="200"
+              value="20"
+            />
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-primary w-100" id="btnStartStudy">
+              <i class="bi bi-play-circle"></i> Start Session
+            </button>
+          </div>
+        </div>
+
+        <div id="studyArea" class="d-none">
+          <div class="text-muted mb-2">
+            Card <span id="studyIndex">0</span> of
+            <span id="studyTotal">0</span>
+          </div>
+          <div class="card study-card shadow-sm">
+            <div class="card-body text-center">
+              <div class="mb-2">
+                <span class="badge text-bg-secondary" id="studyDominance"></span>
+              </div>
+              <div id="studyFront" class="fs-4 mb-3"></div>
+              <img
+                id="studyImage"
+                class="img-fluid rounded mb-3 d-none"
+                alt="flashcard"
+              />
+              <div id="studyAnswer" class="fs-5 text-success d-none mb-3">
+                <hr />
+                <strong>Answer:</strong> <span id="studyAnswerText"></span>
+              </div>
+              <button class="btn btn-outline-primary" id="btnRevealAnswer">
+                <i class="bi bi-eye"></i> Reveal Answer
+              </button>
+              <div id="studyActions" class="mt-3 d-none">
+                <button class="btn btn-success me-2" id="btnCorrect">
+                  <i class="bi bi-check-lg"></i> Correct
+                </button>
+                <button class="btn btn-danger" id="btnIncorrect">
+                  <i class="bi bi-x-lg"></i> Incorrect
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="studyEmpty" class="alert alert-info d-none">
+          No flashcards to study. Create some first.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modals -->
+  <div
+    class="modal fade"
+    id="flashcardModal"
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="flashcardForm">
+          <div class="modal-header">
+            <h5 class="modal-title" id="flashcardModalTitle">New Flashcard</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" id="flashcardId" />
+            <div class="mb-3">
+              <label class="form-label">Text content</label>
+              <textarea id="flashcardText" class="form-control" rows="2"></textarea>
+              <div class="form-text">
+                Provide text, an image URL, or both.
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Image URL</label>
+              <input type="url" id="flashcardImage" class="form-control" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Answer *</label>
+              <textarea
+                id="flashcardAnswer"
+                class="form-control"
+                rows="2"
+                required
+              ></textarea>
+            </div>
+            <div class="mb-3" id="flashcardGroupsField">
+              <label class="form-label">Groups</label>
+              <div id="flashcardGroupsChecklist" class="border rounded p-2">
+                <div class="text-muted small">No groups available</div>
+              </div>
+              <div class="form-text">
+                Group assignments only apply when editing an existing flashcard.
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="groupModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="groupForm">
+          <div class="modal-header">
+            <h5 class="modal-title" id="groupModalTitle">New Group</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" id="groupId" />
+            <div class="mb-3">
+              <label class="form-label">Name *</label>
+              <input type="text" id="groupName" class="form-control" required />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    id="groupDetailModal"
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="groupDetailTitle">Group</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div id="groupDetailBody"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="settingsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="settingsForm">
+          <div class="modal-header">
+            <h5 class="modal-title">Settings</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label">API Base URL</label>
+              <input type="url" id="apiBaseUrl" class="form-control" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Auth Token (optional)</label>
+              <input type="text" id="authToken" class="form-control" />
+              <div class="form-text">
+                Sent as <code>Authorization: Bearer &lt;token&gt;</code>.
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">User ID (optional)</label>
+              <input type="text" id="userId" class="form-control" />
+              <div class="form-text">
+                Sent as <code>X-User-Id</code> header.
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div
+    class="toast-container position-fixed bottom-0 end-0 p-3"
+    style="z-index: 1100"
+  >
+    <div
+      id="appToast"
+      class="toast align-items-center text-bg-dark border-0"
+      role="alert"
+    >
+      <div class="d-flex">
+        <div class="toast-body" id="appToastBody"></div>
+        <button
+          type="button"
+          class="btn-close btn-close-white me-2 m-auto"
+          data-bs-dismiss="toast"
+        ></button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
