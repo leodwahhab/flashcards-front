@@ -293,6 +293,16 @@ function loadFcGroupChecks(selectedIds) {
     });
 }
 
+$('#btn-fc-create-group').on('click', function() {
+    var name = $('#fc-new-group-name').val().trim();
+    if (!name) return;
+    api('POST', '/groups', { name: name }).done(function(g) {
+        allGroups.unshift(g);
+        $('#fc-groups-checks').append(`<div class="form-check"><input class="form-check-input fc-grp-chk" type="checkbox" value="${g.id}" id="fcgrp-${g.id}" checked><label class="form-check-label" for="fcgrp-${g.id}">${escHtml(g.name)}</label></div>`);
+        $('#fc-new-group-name').val('');
+    });
+});
+
 $(document).on('click', '.btn-edit-fc', function() {
     const id = $(this).data('id');
     api('GET', '/flashcards/' + id).done(function(c) {
