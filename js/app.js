@@ -50,7 +50,7 @@ $('#form-login').on('submit', function(e) {
         localStorage.setItem('token', token);
         showPage('home');
     }).fail(function() {
-        $('#auth-error').text('Email ou senha inválidos').show();
+        $('#auth-error').removeClass('alert-success').addClass('alert-danger').text('Email ou senha inválidos').show();
     });
 });
 
@@ -65,13 +65,12 @@ $('#form-register').on('submit', function(e) {
     api('POST', '/auth/register', {
         email: $email.val(),
         password: $pass.val()
-    }).done(function(res) {
-        token = res.token;
-        localStorage.setItem('token', token);
-        showPage('home');
+    }).done(function() {
+        $('#auth-tabs a[data-tab="login"]').click();
+        $('#auth-error').removeClass('alert-danger').addClass('alert-success').text('Cadastro realizado! Faça login.').show();
     }).fail(function(xhr) {
         const msg = xhr.status === 409 ? 'Email já cadastrado' : 'Erro ao cadastrar';
-        $('#auth-error').text(msg).show();
+        $('#auth-error').removeClass('alert-success').addClass('alert-danger').text(msg).show();
     });
 });
 
@@ -216,26 +215,26 @@ $('#btn-delete-group').on('click', function() {
 
 $('#btn-study-group').on('click', function(e) {
     e.preventDefault();
-    startStudy(currentGroupId);
+    showPage('study', currentGroupId);
 });
 
 // --- Study ---
 let studyCards = [], studyIndex = 0;
 
 function startStudy(groupId) {
+    if (groupId === true) return;
+    $('#study-card, #study-hint, #study-done, #study-empty').hide();
+    $('#study-actions').addClass('d-none');
+    $('#study-progress').text('');
     const params = groupId ? '?group_id=' + groupId + '&limit=20' : '?limit=20';
     api('GET', '/study/flashcards' + params).done(function(cards) {
         studyCards = cards;
         studyIndex = 0;
         if (cards.length === 0) {
-            $('#study-card, #study-actions, #study-hint').hide();
-            $('#study-done').show();
-            $('#study-progress').text('');
+            $('#study-empty').show();
         } else {
-            $('#study-done').hide();
             showStudyCard();
         }
-        showPage('study', true);
     });
 }
 
@@ -247,13 +246,13 @@ function showStudyCard() {
     $('#study-back-text').text(c.answer);
     $('#study-card-inner').removeClass('flipped');
     $('#study-card, #study-hint').show();
-    $('#study-actions').hide();
+    $('#study-actions').addClass('d-none');
     $('#study-progress').text((studyIndex + 1) + ' / ' + studyCards.length);
 }
 
 $('#study-card').on('click', function() {
     $('#study-card-inner').addClass('flipped');
-    $('#study-actions').show();
+    $('#study-actions').removeClass('d-none');
     $('#study-hint').hide();
 });
 
@@ -262,7 +261,8 @@ $('#btn-correct, #btn-incorrect').on('click', function() {
     api('POST', '/study/flashcards/' + studyCards[studyIndex].id + '/answer', { result });
     studyIndex++;
     if (studyIndex >= studyCards.length) {
-        $('#study-card, #study-actions, #study-hint').hide();
+        $('#study-card, #study-hint').hide();
+        $('#study-actions').addClass('d-none');
         $('#study-done').show();
     } else {
         showStudyCard();
