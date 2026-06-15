@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcards</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary" id="main-navbar" style="display:none">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#" data-page="home">
+                <i class="bi bi-lightning-charge-fill"></i> Flashcards
+            </a>
+            <div class="d-flex align-items-center gap-3">
+                <a href="#" class="btn btn-outline-light btn-sm" data-page="create-flashcard">
+                    <i class="bi bi-plus-lg"></i> Criar
+                </a>
+                <a href="#" class="btn btn-outline-light btn-sm" id="btn-logout">
+                    <i class="bi bi-box-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Auth Page -->
+    <div id="page-auth" class="page">
+        <div class="auth-container">
+            <div class="text-center mb-4">
+                <h1 class="fw-bold text-primary"><i class="bi bi-lightning-charge-fill"></i> Flashcards</h1>
+                <p class="text-muted">Estude de forma inteligente</p>
+            </div>
+            <ul class="nav nav-pills nav-justified mb-4" id="auth-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#" data-tab="login">Entrar</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-tab="register">Cadastrar</a>
+                </li>
+            </ul>
+            <form id="form-login">
+                <div class="mb-3">
+                    <input type="email" class="form-control" id="login-email" placeholder="Email" required>
+                </div>
+                <div class="mb-3">
+                    <input type="password" class="form-control" id="login-password" placeholder="Senha" required>
+                </div>
+                <button class="btn btn-primary w-100">Entrar</button>
+            </form>
+            <form id="form-register" style="display:none" novalidate>
+                <div class="mb-3">
+                    <input type="email" class="form-control" id="register-email" placeholder="Email" required>
+                    <div class="invalid-feedback">Informe um email válido</div>
+                </div>
+                <div class="mb-3">
+                    <input type="password" class="form-control" id="register-password" placeholder="Senha (min. 6 caracteres)" minlength="6" required>
+                    <div class="invalid-feedback">A senha deve ter pelo menos 6 caracteres</div>
+                </div>
+                <button class="btn btn-primary w-100">Cadastrar</button>
+            </form>
+            <div id="auth-error" class="alert alert-danger mt-3" style="display:none"></div>
+        </div>
+    </div>
+
+    <!-- Home Page -->
+    <div id="page-home" class="page" style="display:none">
+        <div class="container py-4">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="fw-bold mb-0">Meus Flashcards</h4>
+                        <a href="#" class="btn btn-primary btn-sm" data-page="study">
+                            <i class="bi bi-play-fill"></i> Estudar
+                        </a>
+                    </div>
+                    <div id="flashcards-list" class="row g-3"></div>
+                    <div id="flashcards-empty" class="text-center text-muted py-5" style="display:none">
+                        <i class="bi bi-card-text display-4"></i>
+                        <p class="mt-2">Nenhum flashcard ainda. Crie o primeiro!</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold mb-0">Grupos</h5>
+                        <button class="btn btn-sm btn-outline-primary" id="btn-create-group">
+                            <i class="bi bi-plus"></i>
+                        </button>
+                    </div>
+                    <div id="groups-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create/Edit Flashcard Page -->
+    <div id="page-create-flashcard" class="page" style="display:none">
+        <div class="container py-4">
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <h4 class="fw-bold mb-4" id="flashcard-form-title">Criar Flashcard</h4>
+                    <form id="form-flashcard">
+                        <input type="hidden" id="flashcard-id">
+                        <div class="mb-3">
+                            <label class="form-label">Frente (texto)</label>
+                            <textarea class="form-control" id="fc-text" rows="3" placeholder="Pergunta ou conceito"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Frente (URL da imagem)</label>
+                            <input type="url" class="form-control" id="fc-image" placeholder="https://...">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Verso (resposta) *</label>
+                            <textarea class="form-control" id="fc-answer" rows="3" placeholder="Resposta" required></textarea>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-primary">Salvar</button>
+                            <a href="#" class="btn btn-outline-secondary" data-page="home">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Group Detail Page -->
+    <div id="page-group" class="page" style="display:none">
+        <div class="container py-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="fw-bold mb-0" id="group-title"></h4>
+                <div class="d-flex gap-2">
+                    <a href="#" class="btn btn-primary btn-sm" id="btn-study-group">
+                        <i class="bi bi-play-fill"></i> Estudar grupo
+                    </a>
+                    <button class="btn btn-outline-danger btn-sm" id="btn-delete-group">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="group-flashcards" class="row g-3"></div>
+            <div id="group-empty" class="text-center text-muted py-5" style="display:none">
+                <p>Nenhum flashcard neste grupo.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Study Page -->
+    <div id="page-study" class="page" style="display:none">
+        <div class="container py-4">
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div id="study-card" class="study-card" style="display:none">
+                        <div class="study-card-inner" id="study-card-inner">
+                            <div class="study-card-front">
+                                <span id="study-front-text"></span>
+                                <img id="study-front-img" class="img-fluid mt-2" style="display:none">
+                            </div>
+                            <div class="study-card-back">
+                                <span id="study-back-text"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-center text-muted mt-2 mb-3" id="study-hint">Clique no card para virar</p>
+                    <div class="d-flex justify-content-center gap-3" id="study-actions" style="display:none">
+                        <button class="btn btn-danger btn-lg" id="btn-incorrect">
+                            <i class="bi bi-x-lg"></i> Errei
+                        </button>
+                        <button class="btn btn-success btn-lg" id="btn-correct">
+                            <i class="bi bi-check-lg"></i> Acertei
+                        </button>
+                    </div>
+                    <div id="study-done" class="text-center py-5" style="display:none">
+                        <i class="bi bi-trophy display-3 text-warning"></i>
+                        <h4 class="mt-3">Sessão finalizada!</h4>
+                        <a href="#" class="btn btn-primary mt-3" data-page="home">Voltar</a>
+                    </div>
+                    <div class="text-center mt-3">
+                        <small class="text-muted" id="study-progress"></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Group Create Modal -->
+    <div class="modal fade" id="modal-group" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Novo Grupo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="form-group">
+                    <div class="modal-body">
+                        <input type="text" class="form-control" id="group-name" placeholder="Nome do grupo" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary">Criar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add to Group Modal -->
+    <div class="modal fade" id="modal-add-to-group" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Adicionar a grupo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="modal-groups-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
