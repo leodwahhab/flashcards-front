@@ -34,6 +34,7 @@ body {
 .fc-card:hover { transform: translateY(-2px); }
 .fc-card .fc-answer { color: #586380; font-size: .9rem; }
 .fc-card .fc-meta { font-size: .75rem; color: #939bb4; margin-top: .5rem; }
+.fc-group-tag { font-size: .7rem; font-weight: normal; }
 
 /* Dominance badges */
 .badge-low { background: #ff6b6b; }
@@ -53,6 +54,36 @@ body {
     transition: background .15s;
 }
 .group-item:hover { background: #eef1fa; }
+
+/* Home sections */
+.home-section { margin-bottom: 2rem; }
+.home-item {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    background: #fff;
+    border-radius: 8px;
+    padding: .75rem 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    height: 100%;
+}
+.group-item-card .item-label { cursor: pointer; }
+.group-item-card .item-label:hover { color: var(--primary); }
+.session-item { font-size: .9rem; }
+.bulk-bar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: .5rem 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
 
 /* Study card */
 .study-card {
@@ -88,15 +119,6 @@ body {
     background: var(--primary);
     color: #fff;
 }
-
-/* Modal groups list */
-#modal-groups-list .group-select-item {
-    padding: .6rem 1rem;
-    border-radius: 6px;
-    cursor: pointer;
-}
-#modal-groups-list .group-select-item:hover { background: #eef1fa; }
-
 
 /* Form validation */
 .form-control.is-invalid { border-color: #dc3545; }

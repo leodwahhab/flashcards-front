@@ -68,28 +68,44 @@
     <!-- Home Page -->
     <div id="page-home" class="page" style="display:none">
         <div class="container py-4">
-            <div class="row">
-                <div class="col-lg-8">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h4 class="fw-bold mb-0">Meus Flashcards</h4>
-                        <a href="#" class="btn btn-primary btn-sm" data-page="study">
-                            <i class="bi bi-play-fill"></i> Estudar
-                        </a>
-                    </div>
-                    <div id="flashcards-list" class="row g-3"></div>
-                    <div id="flashcards-empty" class="text-center text-muted py-5" style="display:none">
-                        <i class="bi bi-card-text display-4"></i>
-                        <p class="mt-2">Nenhum flashcard ainda. Crie o primeiro!</p>
-                    </div>
+            <!-- Bulk actions bar -->
+            <div id="bulk-actions" class="bulk-bar" style="display:none">
+                <span id="bulk-count"></span>
+                <button class="btn btn-sm btn-outline-danger" id="btn-bulk-delete"><i class="bi bi-trash"></i> Excluir</button>
+                <button class="btn btn-sm btn-outline-secondary" id="btn-bulk-add-group" style="display:none"><i class="bi bi-folder-plus"></i> Adicionar a grupo</button>
+            </div>
+
+            <!-- Flashcards row -->
+            <div class="home-section">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <h5 class="fw-bold mb-0">Meus Flashcards</h5>
+                    <a href="#" class="btn btn-sm btn-outline-primary" data-page="create-flashcard"><i class="bi bi-plus"></i></a>
+                    <button class="btn btn-sm btn-link text-muted" id="btn-show-all-fc" style="display:none">ver mais</button>
                 </div>
-                <div class="col-lg-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="fw-bold mb-0">Grupos</h5>
-                        <button class="btn btn-sm btn-outline-primary" id="btn-create-group">
-                            <i class="bi bi-plus"></i>
-                        </button>
-                    </div>
-                    <div id="groups-list"></div>
+                <div id="flashcards-list" class="row g-3"></div>
+                <div id="flashcards-empty" class="text-center text-muted py-3" style="display:none">
+                    <p class="mb-0">Nenhum flashcard ainda.</p>
+                </div>
+            </div>
+
+            <!-- Groups row -->
+            <div class="home-section">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <h5 class="fw-bold mb-0">Meus Grupos</h5>
+                    <button class="btn btn-sm btn-outline-primary" id="btn-create-group"><i class="bi bi-plus"></i></button>
+                    <button class="btn btn-sm btn-link text-muted" id="btn-show-all-groups" style="display:none">ver mais</button>
+                </div>
+                <div id="groups-list" class="row g-3"></div>
+            </div>
+
+            <!-- Sessions row -->
+            <div class="home-section">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <h5 class="fw-bold mb-0">Minhas Últimas Sessões</h5>
+                </div>
+                <div id="sessions-list" class="row g-3"></div>
+                <div id="sessions-empty" class="text-center text-muted py-3" style="display:none">
+                    <p class="mb-0">Nenhuma sessão registrada.</p>
                 </div>
             </div>
         </div>
@@ -114,6 +130,10 @@
                         <div class="mb-3">
                             <label class="form-label">Verso (resposta) *</label>
                             <textarea class="form-control" id="fc-answer" rows="3" placeholder="Resposta" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Grupos</label>
+                            <div id="fc-groups-checks"></div>
                         </div>
                         <div class="d-flex gap-2">
                             <button class="btn btn-primary">Salvar</button>
@@ -218,7 +238,14 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div id="modal-groups-list"></div>
+                    <div id="modal-group-checks"></div>
+                    <div class="mt-3 d-flex gap-2">
+                        <input type="text" class="form-control form-control-sm" id="modal-new-group-name" placeholder="Novo grupo...">
+                        <button class="btn btn-sm btn-outline-primary" id="btn-modal-create-group"><i class="bi bi-plus"></i></button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" id="btn-confirm-add-group">Adicionar</button>
                 </div>
             </div>
         </div>
