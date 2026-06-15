@@ -1,4 +1,5 @@
-const API = 'http://localhost:8080/api/v1';
+const API = 'https://flashcards-back-production-4f5d.up.railway.app/api/v1';
+// const API = 'http:localhost:8080/api/v1'
 let token = localStorage.getItem('token');
 
 // --- API Client ---
