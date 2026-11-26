@@ -1,0 +1,132 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Calma: tokens do design system (claro e escuro). */
+:root {
+  --surface: #ffffff;
+  --surface-soft: #f6f6f6;
+  --surface-raised: #ffffff;
+  --ink: #1a1a1a;
+  --ink-muted: #5c5c5c;
+  --line: #e6e6e6;
+  --line-strong: #8a8a8a;
+  --brand: #1f1f1f;
+  --brand-strong: #3a3a3a;
+  --on-brand: #ffffff;
+  --brand-soft: #efefef;
+  --brand-ink: #2b2b2b;
+  --accent: #d9d9d9;
+  --success-soft: #eaf2ec;
+  --success-ink: #2f6b45;
+  --danger-soft: #f6eaea;
+  --danger-ink: #8f2f2f;
+  --warn-soft: #f6efe0;
+  --warn-ink: #7a5a14;
+  --info-soft: #e8eef6;
+  --info-ink: #2f4f7a;
+  --shadow-soft: 0 1px 2px rgba(0,0,0,.04), 0 6px 20px rgba(0,0,0,.05);
+  --shadow-lift: 0 2px 4px rgba(0,0,0,.04), 0 14px 36px rgba(0,0,0,.08);
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --radius: 0.875rem;
+}
+.dark {
+  --surface: #111111;
+  --surface-soft: #181818;
+  --surface-raised: #1c1c1c;
+  --ink: #f2f2f2;
+  --ink-muted: #a6a6a6;
+  --line: #2a2a2a;
+  --line-strong: #6f6f6f;
+  --brand: #f2f2f2;
+  --brand-strong: #d4d4d4;
+  --on-brand: #111111;
+  --brand-soft: #262626;
+  --brand-ink: #e6e6e6;
+  --accent: #4a4a4a;
+  --success-soft: #16241b;
+  --success-ink: #8fcba5;
+  --danger-soft: #2a1a1a;
+  --danger-ink: #e8a3a3;
+  --warn-soft: #2a2314;
+  --warn-ink: #e3c47a;
+  --info-soft: #172130;
+  --info-ink: #9dbbe6;
+  --shadow-soft: 0 6px 20px rgba(0,0,0,.35);
+  --shadow-lift: 0 14px 36px rgba(0,0,0,.5);
+}
+
+/* Mapeamento para o vocabulário do shadcn */
+@theme inline {
+  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --color-background: var(--surface);
+  --color-foreground: var(--ink);
+  --color-card: var(--surface-raised);
+  --color-card-foreground: var(--ink);
+  --color-popover: var(--surface-raised);
+  --color-popover-foreground: var(--ink);
+  --color-primary: var(--brand);
+  --color-primary-foreground: var(--on-brand);
+  --color-secondary: var(--brand-soft);
+  --color-secondary-foreground: var(--brand-ink);
+  --color-muted: var(--surface-soft);
+  --color-muted-foreground: var(--ink-muted);
+  --color-accent: var(--brand-soft);
+  --color-accent-foreground: var(--brand-ink);
+  --color-destructive: var(--danger-ink);
+  --color-border: var(--line);
+  --color-input: var(--line-strong);
+  --color-ring: var(--brand);
+  --color-surface: var(--surface);
+  --color-surface-soft: var(--surface-soft);
+  --color-surface-raised: var(--surface-raised);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-brand: var(--brand);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-ink: var(--brand-ink);
+  --color-on-brand: var(--on-brand);
+  --color-success-soft: var(--success-soft);
+  --color-success-ink: var(--success-ink);
+  --color-danger-soft: var(--danger-soft);
+  --color-danger-ink: var(--danger-ink);
+  --color-warn-soft: var(--warn-soft);
+  --color-warn-ink: var(--warn-ink);
+  --color-info-soft: var(--info-soft);
+  --color-info-ink: var(--info-ink);
+  --shadow-soft: var(--shadow-soft);
+  --shadow-lift: var(--shadow-lift);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+}
+
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  html { -webkit-tap-highlight-color: transparent; }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    transition: background-color .4s var(--ease-soft), color .4s var(--ease-soft);
+    overscroll-behavior-y: none;
+  }
+  :focus-visible { outline: 3px solid var(--brand); outline-offset: 3px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+/* Fundo suave que respira, sem cansar a vista */
+@keyframes drift { 0%,100% { transform: translate3d(0,0,0) scale(1); } 50% { transform: translate3d(3%, -4%, 0) scale(1.08); } }
+.aura::before, .aura::after {
+  content: ""; position: fixed; z-index: -1; pointer-events: none; border-radius: 999px; filter: blur(90px); opacity: .5;
+}
+.aura::before { width: 46vmax; height: 46vmax; top: -18vmax; left: -12vmax; background: var(--brand-soft); animation: drift 22s ease-in-out infinite; }
+.aura::after { width: 40vmax; height: 40vmax; bottom: -16vmax; right: -10vmax; background: var(--accent); opacity: .22; animation: drift 28s ease-in-out infinite reverse; }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
